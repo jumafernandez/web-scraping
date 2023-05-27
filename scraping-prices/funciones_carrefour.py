@@ -3,6 +3,7 @@
 import pandas as pd
 from bs4 import BeautifulSoup
 import json
+from funciones_generales import fecha_hora_actual_str
 
 def formatear_matriz_precios_carrefour(df_matriz):
     '''
@@ -22,12 +23,10 @@ def formatear_matriz_precios_carrefour(df_matriz):
     df_matriz_flat = pd.json_normalize(df_matriz.to_dict('records'))
     
     # Defino las columnas con las que me quedo
-    df_productos = df_matriz_flat[['@id', 'description', 'image', 'mpn', 'name', 'sku', 'brand.name', 'offers.lowPrice', 'offers.highPrice', 'rubro']]
+    df_productos = df_matriz_flat[['@id', 'mpn', 'name', 'sku', 'brand.name', 'offers.lowPrice', 'offers.highPrice', 'rubro']]
     
     # Las renombro
     df_productos.rename(columns={'@id': 'url_producto',
-                                 'description': 'descripcion',
-                                 'image': 'imagen',
                                  'mpn': 'mpn',
                                  'name': 'producto',
                                  'sku': 'sku',
@@ -36,8 +35,11 @@ def formatear_matriz_precios_carrefour(df_matriz):
                                  'offers.highPrice': 'precio_alto',
                                  'rubro': 'rubro'}, inplace=True)
 
+    # Agrego la columna con la fecha del relevamiento
+    df_productos['fecha_relevamiento'] = fecha_hora_actual_str()
+    
     # Reordena las columnas
-    column_order = ['producto', 'marca', 'descripcion', 'rubro', 'url_producto', 'imagen', 'mpn', 'sku', 'precio_bajo', 'precio_alto']
+    column_order = ['fecha_relevamiento', 'producto', 'marca', 'rubro', 'url_producto', 'mpn', 'sku', 'precio_bajo', 'precio_alto']
     df_productos_ordenados = df_productos[column_order]
     
     return df_productos_ordenados

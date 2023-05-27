@@ -39,4 +39,4 @@ matriz_carrefour_cruda = scraping_carrefour_argentina(rubros_relevamiento, drive
 matriz_carrefour_formateada = formatear_matriz_precios_carrefour(matriz_carrefour_cruda)
 
 # Persiste la matriz en un csv
-matriz_carrefour_formateada.to_csv(f'data/matriz-carrefour-{fecha_hora_actual_str()}.csv', index=False)
+matriz_carrefour_formateada.to_csv(f'data/matriz-carrefour-{fecha_hora_actual_str()}.csv', index=False, sep='|')
